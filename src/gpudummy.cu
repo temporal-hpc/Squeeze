@@ -152,7 +152,7 @@ void boundingBox(size_t n, size_t nb, size_t rb, double density){
     #ifdef DEBUG
         printf("Initial state\n");
         print_dmat(PRINTLIMIT, RLEVEL, n+2, n+2, mat_h, "");
-        getchar();
+        //getchar();
     #endif
 
     dim3 block, grid;
@@ -231,7 +231,7 @@ void compressed(size_t n, size_t nb, size_t rb, double density){
     #ifdef DEBUG
         printf("Initial state\n");
         print_dmat(PRINTLIMIT, RLEVEL, nx+2, ny+2, mat_h, "");
-        getchar();
+        //getchar();
     #endif
     // compressed map
     auto lambdamap = [] __device__ (const int nb, const int rb, const int WSIZE, half* mata, half* matb){
@@ -344,7 +344,7 @@ void compressed_tc(size_t n, size_t nb, size_t rb, double density){
     #ifdef DEBUG
         printf("Initial state\n");
         print_dmat(PRINTLIMIT, RLEVEL, nx+2, ny+2, mat_h, "");
-        getchar();
+        //getchar();
     #endif
     auto lambdamap_tc = [] __device__ (const int nb, const int rb, const int WSIZE, half* mata, half* matb){
         
@@ -476,7 +476,7 @@ void lambda(size_t n, size_t nb, size_t rb, double density){
     #ifdef DEBUG
         printf("Initial state\n");
         print_dmat(PRINTLIMIT, RLEVEL, n+2, n+2, mat_h, "");
-        getchar();
+        //getchar();
     #endif
 
     dim3 block, grid;
@@ -602,7 +602,7 @@ void performLoad(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t nb, size_t r
         #ifdef DEBUG
             printf("result ping\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat2_d, "");
-            getchar();
+            //getchar();
         #endif
 
         kernelBoundingBox<<< grid, block >>>(nx-2, ny-2, nb, rb, mat2_d, mat1_d, map, inv, WSIZE);	
@@ -610,7 +610,7 @@ void performLoad(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t nb, size_t r
         #ifdef DEBUG
             printf("result pong\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat1_d, "");
-            getchar();
+            //getchar();
         #endif
     }
 #ifdef DEBUG
@@ -652,7 +652,7 @@ void performLoadLambdaTC(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t nb, 
         #ifdef DEBUG
             printf("result ping\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat2_d, "");
-            getchar();
+            //getchar();
         #endif
 
         kernelLambdaTC<<< grid, block >>>(nx-2, ny-2, nb, rb, mat2_d, mat1_d, map, inv, WSIZE);	
@@ -660,7 +660,7 @@ void performLoadLambdaTC(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t nb, 
         #ifdef DEBUG
             printf("result pong\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat1_d, "");
-            getchar();
+            //getchar();
         #endif
     }
 #ifdef DEBUG
@@ -707,7 +707,7 @@ void performLoadCompressed(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t nb
             printf("result ping\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat2_d, "");
             print_dmat_gpu_comp(PRINTLIMIT, RLEVEL, nfract, rb, block.x, nx, ny, mat_h, mat2_d, "");
-            getchar();
+            //getchar();
         #endif
 
         kernelCompressed<<< grid, block >>>(nfract, nx-2, ny-2, nb, rb, mat2_d, mat1_d, map, inv, WSIZE);	
@@ -716,7 +716,7 @@ void performLoadCompressed(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t nb
             printf("result pong\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat1_d, "");
             print_dmat_gpu_comp(PRINTLIMIT, RLEVEL, nfract, rb, block.x, nx, ny, mat_h, mat1_d, "");
-            getchar();
+            //getchar();
         #endif
     }
 #ifdef DEBUG
@@ -764,7 +764,7 @@ void performLoadCompressed_tc(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t
             printf("result ping\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat2_d, "");
             print_dmat_gpu_comp(PRINTLIMIT, RLEVEL, nfract, rb, block.x, nx, ny, mat_h, mat2_d, "");
-            getchar();
+            //getchar();
         #endif
 
         kernelCompressed_tc<<< grid, block >>>(nfract, nx-2, ny-2, nb, rb, mat2_d, mat1_d, map, inv, WSIZE);	
@@ -773,7 +773,7 @@ void performLoadCompressed_tc(MTYPE *mat_h, MTYPE *mat1_d, MTYPE *mat2_d, size_t
             printf("result pong\n");
             print_dmat_gpu(PRINTLIMIT, RLEVEL, nx, ny, mat_h, mat1_d, "");
             print_dmat_gpu_comp(PRINTLIMIT, RLEVEL, nfract, rb, block.x, nx, ny, mat_h, mat1_d, "");
-            getchar();
+            //getchar();
         #endif
     }
 #ifdef DEBUG
