@@ -488,12 +488,12 @@ void lambda(size_t n, size_t nb, size_t rb, double density){
     };
 
     auto lambdamap_tc = [] __device__ (const int nb, const int rb, const int WSIZE, half* mata, half* matb){
-        
+	//Has to be declared after the matrices above to avoid 8-byte shifting
         __shared__ uint2 m;
 
         wmma::fragment<wmma::matrix_a, 16, 16, 16, half, wmma::row_major> a_fragment;
         wmma::fragment<wmma::matrix_b, 16, 16, 16, half, wmma::col_major> b_fragment;
-        wmma::fragment<wmma::accumulator, 16, 16, 16, half> c_fragment;
+        wmma::fragment<wmma::accumulator, 16, 16, 16, float> c_fragment;
 
         auto beta = [] __device__ (const int nb, const int u){
             int b = (int)((blockIdx.x*(u & 1) + blockIdx.y*((u+1) & 1))/(pow3((u>>1) + (u&1) - 1)))%3;
@@ -505,13 +505,16 @@ void lambda(size_t n, size_t nb, size_t rb, double density){
 
         if (lid < 32) {
             //Has to be resetted to 0. Latter kernel calls were getting weird values
-            matb[lid] = 0;
+            #pragma unroll
+            for (int i=0; i<2; i++){
+                matb[i*32 + lid] = 0;
+            }
             if (lid < rb){
                 mata[lid] = 1 << lid;
             }
         } else {
             lid -= 32;
-            if (lid < rb<<1){
+            if (lid < rb*2){
                 char column = lid/rb;
                 //lid = lid%rb;
                 lid = lid-rb*column;

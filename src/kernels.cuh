@@ -69,7 +69,6 @@ __global__ void kernelLambdaTC(const size_t nx, const size_t ny, const size_t nb
     }*/
     //__syncthreads();
 
-
     if(p.x < nx && p.y < ny && (p.x & (nx-1-p.y)) == 0){
 
         /*int nc =    cache[CINDEX(lp.x-1, lp.y-1)] + cache[CINDEX(lp.x, lp.y-1)] + cache[CINDEX(lp.x+1, lp.y-1)] + 
@@ -83,6 +82,7 @@ __global__ void kernelLambdaTC(const size_t nx, const size_t ny, const size_t nb
         unsigned int c = dmat1[GINDEX(p.x, p.y, nx)];
         dmat2[GINDEX(p.x, p.y, nx)] = c*h(nc, EL, EU) + (1-c)*h(nc, FL, FU);
     }
+
 }
 
 template<typename Lambda, typename Inverse>
