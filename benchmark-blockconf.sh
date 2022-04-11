@@ -46,10 +46,10 @@ do
         for q in `seq 1 ${NM}`;
         do
             # Chosen MAP
-            echo "${GPUPROG} ${DEV} ${REP} ${q} 1 1"
+            echo "${GPUPROG} ${DEV} ${REP} ${q} 0.5 1"
             #echo "${GPUPROG} ${DEV} ${REP} 2 1 1"
             echo -n "[BENCHMARK] ${METHODS[$(($q-1))]} ($q) map (${SAMPLES} Samples)............."
-			x=`${GPUPROG} ${DEV} ${REP} ${q} 1 1`
+			x=`${GPUPROG} ${DEV} ${REP} ${q} 0.5 1`
             echo "done"
             echo "---> BPOWER=${BP} RLEVEL=${N} --> (MEAN, VAR, STDEV, STERR) -> (${x})"
 			echo "Saving in ${OUTPUT}..."

@@ -28,6 +28,23 @@ unsigned int nfract;
 uint2 inv(const size_t xx, const size_t yy, const int nb, const int rb, const int WSIZE);
 uint2 lamb(const size_t x, const size_t y, const int nb, const int rb, const int WSIZE);
 
+void saveImage(char* filename, MTYPE* hostdata, MTYPE* devdata, int nx, int ny){
+
+    cudaMemcpy(hostdata, devdata, sizeof(MTYPE)*nx*ny, cudaMemcpyDeviceToHost);
+
+    int width = nx;
+    int height = ny;
+    FILE *f = fopen(filename, "wb");
+	fprintf(f, "P6\n%i %i 255\n", width, height);
+	for (int y=0; y<height; y++) {
+	    for (int x=0; x<width; x++) {
+		fputc(hostdata[y*width + x]*255, f);   // 0 .. 255
+		fputc(hostdata[y*width + x]*255, f);   // 0 .. 255
+		fputc(hostdata[y*width + x]*255, f);   // 0 .. 255
+	    }
+	}
+	fclose(f);
+}
 
 RunningStat *r;
 
@@ -174,6 +191,8 @@ void boundingBox(size_t n, size_t nb, size_t rb, double density){
     };
     
     performLoad(mat_h, mat1_d, mat2_d, nb, rb, nExtended, nExtended, block, grid, bbmap, inv);
+
+    //saveImage("outBB.ppm", mat_h, mat1_d, nExtended, nExtended);
     gpuErrchk(cudaFree(mat1_d));
     gpuErrchk(cudaFree(mat2_d));
 	free(mat_h);
@@ -282,6 +301,7 @@ void compressed(size_t n, size_t nb, size_t rb, double density){
     };
 
     performLoadCompressed(mat_h, mat1_d, mat2_d, nb, rb, nxExtended, nyExtended, block, grid, lambdamap, inv);
+    //saveImage("outSq.ppm", mat_h, mat1_d, nxExtended, nyExtended);
     gpuErrchk(cudaFree(mat1_d));
     gpuErrchk(cudaFree(mat2_d));
 	free(mat_h);
@@ -382,6 +402,7 @@ void compressed_tc(size_t n, size_t nb, size_t rb, double density){
 
         __syncthreads();
         if (index < 32) {
+	    wmma::fill_fragment(c_fragment, 0.f);
             wmma::load_matrix_sync(a_fragment, &mata[0], 16);
         
             wmma::load_matrix_sync(b_fragment, &matb[0], 16);
@@ -438,6 +459,7 @@ void compressed_tc(size_t n, size_t nb, size_t rb, double density){
     };
     // compressed map
     performLoadCompressed_tc(mat_h, mat1_d, mat2_d, nb, rb, nxExtended, nyExtended, block, grid, lambdamap_tc, inv_tc);
+    //saveImage("outSqTC.ppm", mat_h, mat1_d, nxExtended, nyExtended);
     gpuErrchk(cudaFree(mat1_d));
     gpuErrchk(cudaFree(mat2_d));
 	free(mat_h);
@@ -526,6 +548,7 @@ void lambda(size_t n, size_t nb, size_t rb, double density){
 
         __syncthreads();
         if (index < 32) {
+			wmma::fill_fragment(c_fragment, 0.f);
             wmma::load_matrix_sync(a_fragment, &mata[0], 16);
         
             wmma::load_matrix_sync(b_fragment, &matb[0], 16);
@@ -580,6 +603,8 @@ void lambda(size_t n, size_t nb, size_t rb, double density){
         performLoad(mat_h, mat1_d, mat2_d, nb, rb, nExtended, nExtended, block, grid, lambdamap, inv);
 
     }
+    //saveImage("outLamb.ppm", mat_h, mat1_d, nExtended, nExtended);
+
     gpuErrchk(cudaFree(mat1_d));
     gpuErrchk(cudaFree(mat2_d));
 	free(mat_h);
