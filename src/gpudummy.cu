@@ -382,9 +382,13 @@ void compressed_tc(size_t n, size_t nb, size_t rb, double density){
         int lid = threadIdx.x + threadIdx.y*blockDim.x;
         int index = lid;
 
+        if (lid>256){
+
+            mata[lid] = 0;
+            matb[lid] = 0;
+        }
         if (lid < 32) {
             //Has to be resetted to 0. Latter kernel calls were getting weird values
-            matb[lid] = 0;
             if (lid < rb){
                 mata[lid] = 1 << lid;
             }
@@ -402,7 +406,7 @@ void compressed_tc(size_t n, size_t nb, size_t rb, double density){
 
         __syncthreads();
         if (index < 32) {
-	    wmma::fill_fragment(c_fragment, 0.f);
+	        wmma::fill_fragment(c_fragment, 0.f);
             wmma::load_matrix_sync(a_fragment, &mata[0], 16);
         
             wmma::load_matrix_sync(b_fragment, &matb[0], 16);
