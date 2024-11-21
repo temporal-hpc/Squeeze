@@ -1,6 +1,45 @@
 # Squeeze
+Squeeze is an efficient compact fractal processing scheme for tensor core GPUs. By combining discrete-space transformations between compact and expanded forms, Squeeze enables data-parallel computation on a fractal with neighborhood access without needing to expand the fractal in memory. The space transformations are formulated as two GPU tensor-core accelerated thread maps, λ(ω) and ν(ω), which act as compact-to-expanded and expanded-to-compact space functions, respectively.
+
+## Features
+- Tensor core GPU acceleration
+- Efficient compact fractal processing
+- Neighborhood access without memory expansion
+- Supports Non-overlapping-Bounding-Boxes (NBB) class of discrete fractals
+- Extendable to three dimensions
+
+## Getting Started
+### Prerequisites
+```
+CUDA-enabled GPU
+CUDA Toolkit
+C++11 compatible compiler
+```
+## Building the Project
+To build the project, run the following command:
+```
+make
+```
+## Running the Project
+To run the project, use the following command:
+```
+./bin/prog <dev> <repeats> <methods> <density> <seed>
+```
+
+`<dev>`: GPU device ID
+`<repeats>`: Number of repetitions
+`<methods>`: Method to use (1: bounding box, 2: lambda, 3: Lambda compressed, 4: compressed tc)
+`<density>`: Density of the fractal
+`<seed>`: Random seed
+
+## Benchmarking
+To benchmark the project, use the benchmark-blockconf.sh script:
+```
+./benchmark-blockconf.sh <DEV> <GPU_ID> <ARCH> <STARTB> <ENDB> <DB> <STARTR> <ENDR> <DR> <KREPEATS>
+```
 
 ## Citation
+If you use Squeeze in your research, please cite the following pap
 
 ```
 @article{QUEZADA202210,
